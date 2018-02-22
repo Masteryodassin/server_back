@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories("com.tp.server_back.repository")
 @EnableAutoConfiguration
 @EnableTransactionManagement
-@EntityScan(basePackages = {"com.tp2.entities"})
+@EntityScan(basePackages = {"com.tp.serve_back.entities"})
 //@Import(value = {WebSecurityConfig.class})
 public class SpringConfig {
     public static void main(String[] args) {

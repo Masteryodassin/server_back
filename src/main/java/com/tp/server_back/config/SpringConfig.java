@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = {"com.tp.server_back"})
 @EnableJpaRepositories("com.tp.server_back.repository")
 @EnableAutoConfiguration
-@EntityScan(basePackages = {"com.tp.serve_back.entities"})
+@EntityScan(basePackages = {"com.tp.server_back.entities"})
 public class SpringConfig {
     public static void main(String[] args) {
 

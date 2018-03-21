@@ -22,7 +22,7 @@ public class ServerInfo implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	@Column(name="time")
-	private Timestamp timestamp;
+	private Double time;
 	@Column(name="humantime")
 	private Date humantime;
 	@Column(name="traffic_in")
@@ -34,7 +34,7 @@ public class ServerInfo implements Serializable{
 	@Column(name="security_error")
 	private Float security_error;
 	@Column(name="cpu0")
-	private Float cpu0;
+	private float cpu0;
 	@Column(name="cpu1")
 	private Float cpu1;
 	@Column(name="cpu2")
@@ -63,13 +63,13 @@ public class ServerInfo implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Timestamp getTimestamp() {
-		return timestamp;
+	public Double getTime() {
+		return time;
 	}
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public void setTime(Double time) {
+		this.time = time;
 	}
-	public Date getHumantime() {
+	public Date getHumantme() {
 		return humantime;
 	}
 	public void setHumantime(Date humantime) {

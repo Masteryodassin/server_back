@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileParsingService {
+public class FileParsingService <T> {
 
     static FileParsingService instance = new FileParsingService();
 
@@ -155,12 +155,13 @@ public class FileParsingService {
 
             for(int j = 0 ; j < fieldNames.length; j++) {
 
-                setterName = "set" + fieldNames[i].substring(0, 1).toUpperCase() + fieldNames[1].substring(1);
+                setterName =  fieldNames[j];
                 setter = setters.get(setterName);
 
-                try {
 
-                    setter.invoke(serverInfo, map.get(fieldNames[i]));
+                try {
+                    Class<?>[] classes = setter.getParameterTypes();
+                    setter.invoke(serverInfo,classes[0].cast(map.get(fieldNames[j])));
                 } catch (IllegalAccessException iae){
                     iae.printStackTrace();
                 } catch (InvocationTargetException ite){

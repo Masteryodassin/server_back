@@ -158,16 +158,33 @@ public class FileParsingService <T> {
                 setterName =  fieldNames[j];
                 setter = setters.get(setterName);
 
+                if(setter != null) {
 
-                try {
                     Class<?>[] classes = setter.getParameterTypes();
-                    setter.invoke(serverInfo,classes[0].cast(map.get(fieldNames[j])));
-                } catch (IllegalAccessException iae){
-                    iae.printStackTrace();
-                } catch (InvocationTargetException ite){
-                    ite.printStackTrace();
-                }catch (NullPointerException npe){
-                    npe.printStackTrace();
+
+                    try {
+                         if (classes[0].getClass().isInstance(Double.class)) {
+
+                             if (map.get(setterName).equals("")) {
+                                 setter.invoke(serverInfo, Double.valueOf(0));
+                             } else {
+                                 setter.invoke(serverInfo, Double.valueOf((String) map.get(fieldNames[j])));
+                            }
+                        } else {
+                             if (map.get(setterName).equals("")){
+                                 setter.invoke(serverInfo, Float.valueOf(0));
+                             }else {
+                                 setter.invoke(serverInfo, Float.valueOf((String) map.get(fieldNames[j])));
+                             }
+                        }
+
+                    } catch (IllegalAccessException iae) {
+                        iae.printStackTrace();
+                    } catch (InvocationTargetException ite) {
+                        ite.printStackTrace();
+                    } catch (NullPointerException npe) {
+                        npe.printStackTrace();
+                    }
                 }
             }
 

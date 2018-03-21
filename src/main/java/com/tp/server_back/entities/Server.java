@@ -1,6 +1,6 @@
 package com.tp.server_back.entities;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,13 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Table
 @Entity
-public class Server {
+public class Server implements Serializable{
 	
 	@Id
 	@Column(name="id")
@@ -53,6 +52,11 @@ public class Server {
 	public void setDisk_size(double disk_size) {
 		this.disk_size = disk_size;
 	}
-	
+	public List<ServerInfo> getServerInfos() {
+		return serverInfos;
+	}
+	public void setServerInfos(List<ServerInfo> serverInfos) {
+		this.serverInfos = serverInfos;
+	}
 	
 }

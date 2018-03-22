@@ -22,6 +22,6 @@ public class SpringConfig {
     public static void main(String[] args) throws IOException {
 
         SpringApplication.run(SpringConfig.class, args);
-        FileParsingService.getInstance().start();
+
     }
 }

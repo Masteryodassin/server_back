@@ -16,6 +16,9 @@ import javax.persistence.Table;
 @Table
 @Entity
 public class ServerInfo implements Serializable{
+
+
+
 	
 	@Id
 	@Column

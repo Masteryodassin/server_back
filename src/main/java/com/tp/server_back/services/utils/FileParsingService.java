@@ -4,6 +4,8 @@ package com.tp.server_back.services.utils;
 import com.tp.server_back.entities.Server;
 import com.tp.server_back.entities.ServerInfo;
 import com.tp.server_back.services.ServerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Null;
 import java.beans.BeanInfo;
@@ -19,16 +21,30 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 public class FileParsingService <T> {
 
-    static FileParsingService instance = new FileParsingService();
+    final ServerService serverService;
+
+   /* static FileParsingService instance = new FileParsingService();
 
     public static FileParsingService getInstance(){
         if (instance == null) return new FileParsingService();
         return instance;
-    }
+    }*/
 
-    private FileParsingService(){ }
+    @Autowired
+    public FileParsingService(ServerService serverService)throws IOException{
+
+        File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
+        this.serverService = serverService;
+
+        serverMaps = this.parseLines(this.parseFile(file));
+        serverInfos = this.createServerInfos(serverMaps);
+
+        this.createServer(file.getName(),serverMaps.get(0),serverInfos);
+        serverService.save(this.server);
+    }
 
 
     private BufferedReader br;
@@ -44,19 +60,18 @@ public class FileParsingService <T> {
      * Main function of the singleton
      * @throws IOException
      */
-    public void start () throws IOException{
+   /* public void start () throws IOException{
 
-        ServerService serverService = new ServerService();
         File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
 
         serverMaps = this.parseLines(this.parseFile(file));
         serverInfos = this.createServerInfos(serverMaps);
 
-        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(1),serverInfos);
+        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),serverInfos);
         serverService.save(this.server);
 
 
-    }
+    }*/
 
     /**
      * create server from parsed map adding its serverInfos as a list
@@ -69,8 +84,22 @@ public class FileParsingService <T> {
         server = new Server();
 
         server.setName(fileName);
-        server.setMemory_size( Double.valueOf(map.get("memory used")));
-        server.setDisk_size(Double.valueOf(map.get("disk used")));
+
+        String value = map.get("memory_used");
+
+
+        if (map.get("memory_used").isEmpty()){
+            server.setMemory_size( Double.valueOf(0));
+        }else{
+            server.setMemory_size( Double.valueOf(map.get("memory_used")));
+        }
+
+        if (map.get("disk_used").isEmpty()){
+            server.setMemory_size( Double.valueOf(0));
+        }else{
+            server.setMemory_size( Double.valueOf(map.get("disk_used")));
+        }
+
         server.setServerInfos(serverInfoList);
     }
 
@@ -105,14 +134,14 @@ public class FileParsingService <T> {
         Map<String, String> fields = new HashMap<>();
 
         String fieldName = list.get(0);
-        fieldNames = fieldName.split(";");
+        fieldNames = fieldName.split(",");
 
         try {
 
             for (int i = 1; i < list.size(); i++) {
 
                 String data = list.get(i);
-                String[] dataNames = data.split(";");
+                String[] dataNames = data.split(",");
 
                 for (int j = 0; j < fieldNames.length; j++) {
                     if (dataNames[j].equals(null)){
@@ -163,7 +192,7 @@ public class FileParsingService <T> {
                     Class<?>[] classes = setter.getParameterTypes();
 
                     try {
-                         if (classes[0].getClass().isInstance(Double.class)) {
+                         if (Double.class.isAssignableFrom(classes[0])) {
 
                              if (map.get(setterName).equals("")) {
                                  setter.invoke(serverInfo, Double.valueOf(0));

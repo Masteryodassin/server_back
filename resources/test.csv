@@ -1,2 +1,2 @@
-time;traffic_in;traffic_out;memory size;memory used;security error;cpu0;cpu1;cpu2;cpu3;cpu4;cpu5;cpu6;cpu7;cpu8;disk size;disk used
-1518618399;1595000.000000;2781860.000000;2659070000.000000;13958600000.000000;0.000000;;;;;;;;;;;;0
+time,traffic_in,traffic_out,memory_size,memory_used,security_error,cpu0,cpu1,cpu2,cpu3,cpu4,cpu5,cpu6,cpu7,cpu8,disk_size,disk_used
+1515020786,2057410,5857740,9679530000,13958600000,0,62.42,66.06,76.3,62.75,74.83,54.3,71.92,70.28,,19015700000,132070000000

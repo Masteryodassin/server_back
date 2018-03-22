@@ -22,7 +22,7 @@ public class Server implements Serializable{
 	@Column(name="name")
 	private String name;
 	@OneToMany(mappedBy="server")
-	private List<Colonne> colonnes;
+	private List<Label> labels;
 	
 	public int getId() {
 		return id;
@@ -37,11 +37,11 @@ public class Server implements Serializable{
 		this.name = name;
 	}
 
-	public List<Colonne> getColonnes() {
-		return colonnes;
+	public List<Label> getLabels() {
+		return labels;
 	}
-	public void setColonnes(List<Colonne> colonnes) {
-		this.colonnes = colonnes;
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 	
 }

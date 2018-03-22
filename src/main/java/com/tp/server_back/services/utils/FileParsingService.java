@@ -1,7 +1,7 @@
 package com.tp.server_back.services.utils;
 
 
-import com.tp.server_back.entities.Colonne;
+import com.tp.server_back.entities.Label;
 import com.tp.server_back.entities.Server;
 import com.tp.server_back.services.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +37,17 @@ public class FileParsingService <T> {
         this.serverService = serverService;
 
         serverMaps = this.parseLines(this.parseFile(file));
-        colonnes = this.createColonnes(serverMaps);
+        labels = this.createColonnes(serverMaps);
 
-        this.createServer(file.getName(),serverMaps.get(0),colonnes);
+        this.createServer(file.getName(),serverMaps.get(0), labels);
         serverService.save(this.server);
     }
 
 
     private BufferedReader br;
-    private Colonne colonne;
+    private Label label;
     private List<Server> servers = new ArrayList<>();
-    private List <Colonne> colonnes;
+    private List <Label> labels;
     private List<Map<String,String>> serverMaps;
     private String[] fieldNames;
     private Server server;
@@ -62,29 +62,26 @@ public class FileParsingService <T> {
         File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
 
         serverMaps = this.parseLines(this.parseFile(file));
-        colonnes = this.createColonnes(serverMaps);
+        labels = this.createColonnes(serverMaps);
 
-        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),colonnes);
+        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),labels);
         serverService.save(this.server);
 
 
     }*/
 
     /**
-     * create server from parsed map adding its colonnes as a list
+     * create server from parsed map adding its labels as a list
      * @param fileName
      * @param map
-     * @param colonneList
+     * @param labelList
      */
-    private void createServer(String fileName, Map<String, String> map,List<Colonne> colonneList){
+    private void createServer(String fileName, Map<String, String> map,List<Label> labelList){
 
         server = new Server();
-
         server.setName(fileName);
+        server.setLabels(labelList);
 
-        String value = map.get("memory_used");
-
-        server.setColonnes(colonneList);
     }
 
     /**
@@ -108,133 +105,87 @@ public class FileParsingService <T> {
 
 
     /**
-     * parse each lines of the list into a map of fields as Key and corresponding data as value
+     * parse each lines of the list into a map of fields as Key and corresponding datas as value
      * @param list
      */
-    public List<Map<String,String>> parseLines (List<String> list){
+    public List<Map<String,Map<String,String>>> parseColonnes (List<String> list){
 
-        List<Map<String, String>> parsedDatas = new ArrayList<>();
+        List<Map<String, Map<String,String>>> parsedDatas = new ArrayList<>();
 
-        Map<String, String[]> fields = new HashMap<>();
+        Map<String, Map<String,String>> fields = new HashMap<>();
+        Map<String,String> datas =  new HashMap<>();
 
         String fieldName = list.get(0);
         fieldNames = fieldName.split(",");
 
+
         try {
 
-            for (int i = 1; i < list.size(); i++) {
+            for (int i = 1; i < fieldNames.length; i++) {
 
-                String data = list.get(i);
-                String[] dataNames = data.split(",");
-
-                for (int j = 0; j < fieldNames.length; j++) {
-                    if (dataNames[j].equals(null)){
-                        fields.put(fieldNames[j], null);
-                    }else {
-                        fields.put(fieldNames[j], dataNames[j]);
-                    }
+                for (int j = 1 ; j < list.size(); j++) {
+                    String[] dataNames = list.get(j).split(",");
+                    datas.put(dataNames[0],dataNames[i]);
                 }
-
+                fields.put(fieldNames[i],datas);
                 parsedDatas.add(fields);
-
             }
+
         }catch(NullPointerException npe){
             npe.printStackTrace();
         }
-
 
         return parsedDatas;
     }
 
 
     /**
-     * Use the list of datas for populating the list colonnes
+     * Use the list of datas for populating the list labels
      * @param parsedDatas
      */
-    public List<Colonne> createColonnes (List<Map<String,String>> parsedDatas){
+    public List<Label> createColonnes (List<Map<String,Map<String,String>>> parsedDatas){
 
 
-        List<Colonne> colonnes = new ArrayList<>();
-        Map<String,Method> setters = this.getSetters(Colonne.class);
-        Map map;
-        String setterName;
-        Method setter;
+        List<Label> labels = new ArrayList<>();
 
 
-        for (int i = 0; i < parsedDatas.size(); i++){
+            label = new Label();
 
-            map = parsedDatas.get(i);
-            colonne = new Colonne();
 
-            for(int j = 0 ; j < fieldNames.length; j++) {
-
-                setterName =  fieldNames[j];
-                setter = setters.get(setterName);
-
-                if(setter != null) {
-
-                    Class<?>[] classes = setter.getParameterTypes();
-
-                    try {
-                         if (Double.class.isAssignableFrom(classes[0])) {
-
-                             if (map.get(setterName).equals("")) {
-                                 setter.invoke(colonne, Double.valueOf(0));
-                             } else {
-                                 setter.invoke(colonne, Double.valueOf((String) map.get(fieldNames[j])));
-                            }
-                        } else {
-                             if (map.get(setterName).equals("")){
-                                 setter.invoke(colonne, Float.valueOf(0));
-                             }else {
-                                 setter.invoke(colonne, Float.valueOf((String) map.get(fieldNames[j])));
-                             }
-                        }
-
-                    } catch (IllegalAccessException iae) {
-                        iae.printStackTrace();
-                    } catch (InvocationTargetException ite) {
-                        ite.printStackTrace();
-                    } catch (NullPointerException npe) {
-                        npe.printStackTrace();
-                    }
-                }
-            }
-
-            colonnes.add(colonne);
+            labels.add(label);
         }
 
-        return colonnes;
+        return labels;
 
         // set time values
 
-        /*colonne.setTimestamp(Timestamp.valueOf(map.get(fieldNames[0])));
-        colonne.setHumantime(Date.valueOf(map.get(fieldNames[0])));
+        /*label.setTimestamp(Timestamp.valueOf(map.get(fieldNames[0])));
+        label.setHumantime(Date.valueOf(map.get(fieldNames[0])));
 
         // set Traffic values
 
-        colonne.setTraffic_in(Double.valueOf(map.get(fieldNames[0])));
-        colonne.setTraffic_out(Double.valueOf(map.get(fieldNames[0])));
+        label.setTraffic_in(Double.valueOf(map.get(fieldNames[0])));
+        label.setTraffic_out(Double.valueOf(map.get(fieldNames[0])));
 
         //set Memory and security error values
 
-        colonne.setMemory_used(Double.valueOf(map.get(fieldNames[0])));
-        colonne.setSecurity_error(Float.valueOf(map.get(fieldNames[0])));
+        label.setMemory_used(Double.valueOf(map.get(fieldNames[0])));
+        label.setSecurity_error(Float.valueOf(map.get(fieldNames[0])));
 
         // set Cpu usage values
 
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
 
         // set Disk Usage
 
-        colonne.setDisk_used(Double.valueOf(map.get(fieldNames[0])));*/
+        label.setDisk_used(Double.valueOf(map.get(fieldNames[0])));*/
 
 
     }

@@ -1,13 +1,12 @@
 package com.tp.server_back.services.utils;
 
 
+import com.tp.server_back.entities.Colonne;
 import com.tp.server_back.entities.Server;
-import com.tp.server_back.entities.ServerInfo;
 import com.tp.server_back.services.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -15,8 +14,6 @@ import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,17 +37,17 @@ public class FileParsingService <T> {
         this.serverService = serverService;
 
         serverMaps = this.parseLines(this.parseFile(file));
-        serverInfos = this.createServerInfos(serverMaps);
+        colonnes = this.createColonnes(serverMaps);
 
-        this.createServer(file.getName(),serverMaps.get(0),serverInfos);
+        this.createServer(file.getName(),serverMaps.get(0),colonnes);
         serverService.save(this.server);
     }
 
 
     private BufferedReader br;
-    private ServerInfo serverInfo;
+    private Colonne colonne;
     private List<Server> servers = new ArrayList<>();
-    private List <ServerInfo> serverInfos;
+    private List <Colonne> colonnes;
     private List<Map<String,String>> serverMaps;
     private String[] fieldNames;
     private Server server;
@@ -65,21 +62,21 @@ public class FileParsingService <T> {
         File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
 
         serverMaps = this.parseLines(this.parseFile(file));
-        serverInfos = this.createServerInfos(serverMaps);
+        colonnes = this.createColonnes(serverMaps);
 
-        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),serverInfos);
+        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),colonnes);
         serverService.save(this.server);
 
 
     }*/
 
     /**
-     * create server from parsed map adding its serverInfos as a list
+     * create server from parsed map adding its colonnes as a list
      * @param fileName
      * @param map
-     * @param serverInfoList
+     * @param colonneList
      */
-    private void createServer(String fileName, Map<String, String> map,List<ServerInfo> serverInfoList){
+    private void createServer(String fileName, Map<String, String> map,List<Colonne> colonneList){
 
         server = new Server();
 
@@ -87,20 +84,7 @@ public class FileParsingService <T> {
 
         String value = map.get("memory_used");
 
-
-        if (map.get("memory_used").isEmpty()){
-            server.setMemory_size( Double.valueOf(0));
-        }else{
-            server.setMemory_size( Double.valueOf(map.get("memory_used")));
-        }
-
-        if (map.get("disk_used").isEmpty()){
-            server.setMemory_size( Double.valueOf(0));
-        }else{
-            server.setMemory_size( Double.valueOf(map.get("disk_used")));
-        }
-
-        server.setServerInfos(serverInfoList);
+        server.setColonnes(colonneList);
     }
 
     /**
@@ -131,7 +115,7 @@ public class FileParsingService <T> {
 
         List<Map<String, String>> parsedDatas = new ArrayList<>();
 
-        Map<String, String> fields = new HashMap<>();
+        Map<String, String[]> fields = new HashMap<>();
 
         String fieldName = list.get(0);
         fieldNames = fieldName.split(",");
@@ -164,14 +148,14 @@ public class FileParsingService <T> {
 
 
     /**
-     * Use the list of datas for populating the list serverInfos
+     * Use the list of datas for populating the list colonnes
      * @param parsedDatas
      */
-    public List<ServerInfo> createServerInfos (List<Map<String,String>> parsedDatas){
+    public List<Colonne> createColonnes (List<Map<String,String>> parsedDatas){
 
 
-        List<ServerInfo> serverInfos = new ArrayList<>();
-        Map<String,Method> setters = this.getSetters(ServerInfo.class);
+        List<Colonne> colonnes = new ArrayList<>();
+        Map<String,Method> setters = this.getSetters(Colonne.class);
         Map map;
         String setterName;
         Method setter;
@@ -180,7 +164,7 @@ public class FileParsingService <T> {
         for (int i = 0; i < parsedDatas.size(); i++){
 
             map = parsedDatas.get(i);
-            serverInfo = new ServerInfo();
+            colonne = new Colonne();
 
             for(int j = 0 ; j < fieldNames.length; j++) {
 
@@ -195,15 +179,15 @@ public class FileParsingService <T> {
                          if (Double.class.isAssignableFrom(classes[0])) {
 
                              if (map.get(setterName).equals("")) {
-                                 setter.invoke(serverInfo, Double.valueOf(0));
+                                 setter.invoke(colonne, Double.valueOf(0));
                              } else {
-                                 setter.invoke(serverInfo, Double.valueOf((String) map.get(fieldNames[j])));
+                                 setter.invoke(colonne, Double.valueOf((String) map.get(fieldNames[j])));
                             }
                         } else {
                              if (map.get(setterName).equals("")){
-                                 setter.invoke(serverInfo, Float.valueOf(0));
+                                 setter.invoke(colonne, Float.valueOf(0));
                              }else {
-                                 setter.invoke(serverInfo, Float.valueOf((String) map.get(fieldNames[j])));
+                                 setter.invoke(colonne, Float.valueOf((String) map.get(fieldNames[j])));
                              }
                         }
 
@@ -217,40 +201,40 @@ public class FileParsingService <T> {
                 }
             }
 
-            serverInfos.add(serverInfo);
+            colonnes.add(colonne);
         }
 
-        return serverInfos;
+        return colonnes;
 
         // set time values
 
-        /*serverInfo.setTimestamp(Timestamp.valueOf(map.get(fieldNames[0])));
-        serverInfo.setHumantime(Date.valueOf(map.get(fieldNames[0])));
+        /*colonne.setTimestamp(Timestamp.valueOf(map.get(fieldNames[0])));
+        colonne.setHumantime(Date.valueOf(map.get(fieldNames[0])));
 
         // set Traffic values
 
-        serverInfo.setTraffic_in(Double.valueOf(map.get(fieldNames[0])));
-        serverInfo.setTraffic_out(Double.valueOf(map.get(fieldNames[0])));
+        colonne.setTraffic_in(Double.valueOf(map.get(fieldNames[0])));
+        colonne.setTraffic_out(Double.valueOf(map.get(fieldNames[0])));
 
         //set Memory and security error values
 
-        serverInfo.setMemory_used(Double.valueOf(map.get(fieldNames[0])));
-        serverInfo.setSecurity_error(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setMemory_used(Double.valueOf(map.get(fieldNames[0])));
+        colonne.setSecurity_error(Float.valueOf(map.get(fieldNames[0])));
 
         // set Cpu usage values
 
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        serverInfo.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
+        colonne.setCpu0(Float.valueOf(map.get(fieldNames[0])));
 
         // set Disk Usage
 
-        serverInfo.setDisk_used(Double.valueOf(map.get(fieldNames[0])));*/
+        colonne.setDisk_used(Double.valueOf(map.get(fieldNames[0])));*/
 
 
     }

@@ -21,12 +21,8 @@ public class Server implements Serializable{
 	private int id;
 	@Column(name="name")
 	private String name;
-	@Column(name="memory_size")
-	private Double memory_size;
-	@Column(name="disk_size")
-	private Double disk_size;
 	@OneToMany(mappedBy="server")
-	private List<ServerInfo> serverInfos;
+	private List<Colonne> colonnes;
 	
 	public int getId() {
 		return id;
@@ -40,23 +36,12 @@ public class Server implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public double getMemory_size() {
-		return memory_size;
+
+	public List<Colonne> getColonnes() {
+		return colonnes;
 	}
-	public void setMemory_size(double memory_size) {
-		this.memory_size = memory_size;
-	}
-	public double getDisk_size() {
-		return disk_size;
-	}
-	public void setDisk_size(double disk_size) {
-		this.disk_size = disk_size;
-	}
-	public List<ServerInfo> getServerInfos() {
-		return serverInfos;
-	}
-	public void setServerInfos(List<ServerInfo> serverInfos) {
-		this.serverInfos = serverInfos;
+	public void setColonnes(List<Colonne> colonnes) {
+		this.colonnes = colonnes;
 	}
 	
 }

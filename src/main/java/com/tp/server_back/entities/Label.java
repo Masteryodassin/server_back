@@ -18,6 +18,9 @@ public class Label implements Serializable {
     @Column(name= "data")
     @OneToMany(mappedBy = "label")
     private List<Data> datas;
+    @ManyToOne
+    @JoinColumn(name = "id_Server")
+    private Server server;
 
 
 

@@ -1,6 +1,9 @@
 package com.tp.server_back.config;
 
+import com.tp.server_back.entities.Data;
+import com.tp.server_back.services.DataService;
 import com.tp.server_back.services.utils.FileParsingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,9 +22,20 @@ import java.io.IOException;
 @EnableAutoConfiguration
 @EntityScan(basePackages = {"com.tp.server_back.entities"})
 public class SpringConfig {
+
+    @Autowired
+    DataService dataService;
+
     public static void main(String[] args) throws IOException {
 
         SpringApplication.run(SpringConfig.class, args);
 
+
+    }
+
+    public void saveData() throws IOException{
+        Data data = new Data();
+
+        this.dataService.save(data);
     }
 }

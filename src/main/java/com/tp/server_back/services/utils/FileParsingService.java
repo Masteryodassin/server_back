@@ -1,6 +1,7 @@
 package com.tp.server_back.services.utils;
 
 
+import com.tp.server_back.entities.Data;
 import com.tp.server_back.entities.Label;
 import com.tp.server_back.entities.Server;
 import com.tp.server_back.services.ServerService;
@@ -21,7 +22,14 @@ import java.util.stream.Stream;
 @Service
 public class FileParsingService <T> {
 
+    @Autowired
     final ServerService serverService;
+
+
+    private BufferedReader br;
+    private Label label;
+    private List<Server> servers = new ArrayList<>();
+    private String[] fieldNames;
 
    /* static FileParsingService instance = new FileParsingService();
 
@@ -30,57 +38,30 @@ public class FileParsingService <T> {
         return instance;
     }*/
 
-    @Autowired
     public FileParsingService(ServerService serverService)throws IOException{
 
         File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
         this.serverService = serverService;
 
-        serverMaps = this.parseLines(this.parseFile(file));
-        labels = this.createColonnes(serverMaps);
+        List<Map<String,Map<String,String>>> serverMaps = this.parseColonnes(this.parseFile(file));
+        List <Label> labels; labels = this.createColonnes(serverMaps);
 
-        this.createServer(file.getName(),serverMaps.get(0), labels);
-        serverService.save(this.server);
+        Server server = createServer(file.getName(), labels);
+        serverService.save(server);
     }
 
-
-    private BufferedReader br;
-    private Label label;
-    private List<Server> servers = new ArrayList<>();
-    private List <Label> labels;
-    private List<Map<String,String>> serverMaps;
-    private String[] fieldNames;
-    private Server server;
-
-
-    /**
-     * Main function of the singleton
-     * @throws IOException
-     */
-   /* public void start () throws IOException{
-
-        File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
-
-        serverMaps = this.parseLines(this.parseFile(file));
-        labels = this.createColonnes(serverMaps);
-
-        FileParsingService.getInstance().createServer(file.getName(),serverMaps.get(0),labels);
-        serverService.save(this.server);
-
-
-    }*/
 
     /**
      * create server from parsed map adding its labels as a list
      * @param fileName
-     * @param map
      * @param labelList
      */
-    private void createServer(String fileName, Map<String, String> map,List<Label> labelList){
+    private Server createServer(String fileName,List<Label> labelList){
 
-        server = new Server();
+        Server server = new Server();
         server.setName(fileName);
         server.setLabels(labelList);
+        return server;
 
     }
 
@@ -97,7 +78,9 @@ public class FileParsingService <T> {
 
         do {
             line = br.readLine();
-            parsedFileLines.add(line);
+            if (line != null) {
+                parsedFileLines.add(line);
+            }
         } while (line != null);
 
         return parsedFileLines;
@@ -111,25 +94,29 @@ public class FileParsingService <T> {
     public List<Map<String,Map<String,String>>> parseColonnes (List<String> list){
 
         List<Map<String, Map<String,String>>> parsedDatas = new ArrayList<>();
+        Map<String,String> datas;
 
         Map<String, Map<String,String>> fields = new HashMap<>();
-        Map<String,String> datas =  new HashMap<>();
+
 
         String fieldName = list.get(0);
         fieldNames = fieldName.split(",");
 
 
         try {
+            for (int i = 1; i < list.size(); i++) {
 
-            for (int i = 1; i < fieldNames.length; i++) {
+                for (int j = 1 ; j < fieldNames.length; j++) {
 
-                for (int j = 1 ; j < list.size(); j++) {
-                    String[] dataNames = list.get(j).split(",");
-                    datas.put(dataNames[0],dataNames[i]);
+                    String[] dataNames = list.get(i).split(",");
+                    datas =  new HashMap<>();
+                    datas.put(dataNames[0],dataNames[j]);
+                    fields.put(fieldNames[j],datas);
+
                 }
-                fields.put(fieldNames[i],datas);
                 parsedDatas.add(fields);
             }
+
 
         }catch(NullPointerException npe){
             npe.printStackTrace();
@@ -147,48 +134,45 @@ public class FileParsingService <T> {
 
 
         List<Label> labels = new ArrayList<>();
+        List <Data> datas = new ArrayList<>();
+        Data data;
+
+        for (Map<String,Map<String,String>> parseData : parsedDatas){
 
 
-            label = new Label();
+            for (int i = 0; i < fieldNames.length; i++) {
 
 
-            labels.add(label);
+                //time field is implicitly included in the map
+                if (!fieldNames[i].equals("time")) {
+
+                label = new Label();
+                label.setName(fieldNames[i]);
+
+                    Map<String, String> map = parseData.get(fieldNames[i]);
+
+                    for (Map.Entry<String, String> entry : map.entrySet()
+                            ) {
+
+                        data = new Data();
+                        data.setTime(entry.getKey());
+                        data.setValue(entry.getValue());
+                        datas.add(data);
+
+                    }
+
+                    label.setDatas(datas);
+                }
+                labels.add(label);
+            }
+
+
         }
-
         return labels;
-
-        // set time values
-
-        /*label.setTimestamp(Timestamp.valueOf(map.get(fieldNames[0])));
-        label.setHumantime(Date.valueOf(map.get(fieldNames[0])));
-
-        // set Traffic values
-
-        label.setTraffic_in(Double.valueOf(map.get(fieldNames[0])));
-        label.setTraffic_out(Double.valueOf(map.get(fieldNames[0])));
-
-        //set Memory and security error values
-
-        label.setMemory_used(Double.valueOf(map.get(fieldNames[0])));
-        label.setSecurity_error(Float.valueOf(map.get(fieldNames[0])));
-
-        // set Cpu usage values
-
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-        label.setCpu0(Float.valueOf(map.get(fieldNames[0])));
-
-        // set Disk Usage
-
-        label.setDisk_used(Double.valueOf(map.get(fieldNames[0])));*/
-
-
     }
+
+
+
 
 
     /**
@@ -196,7 +180,7 @@ public class FileParsingService <T> {
      * @param targetClass
      * @return map of targetClass setters
      */
-    private Map<String, Method> getSetters(Class<?> targetClass) {
+  /*  private Map<String, Method> getSetters(Class<?> targetClass) {
         try {
             BeanInfo info = Introspector.getBeanInfo(targetClass);
             return Stream.of(info.getPropertyDescriptors())
@@ -206,6 +190,6 @@ public class FileParsingService <T> {
         } catch (IntrospectionException ex) {
             return Collections.emptyMap();
         }
-    }
+    }*/
 
 }

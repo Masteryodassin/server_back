@@ -28,21 +28,7 @@ public class SpringConfig {
 
         SpringApplication.run(SpringConfig.class, args);
 
-       /* Save save = new  Save();
-        save.saveData();*/
     }
 
 
-}
-class Save {
-
-    @Autowired
-    DataService dataService;
-    public void saveData() throws IOException {
-        Data data = new Data();
-        data.setValue("value");
-        data.setTime("time");
-
-        this.dataService.save(data);
-    }
 }

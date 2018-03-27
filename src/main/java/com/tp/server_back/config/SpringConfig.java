@@ -23,18 +23,25 @@ import java.io.IOException;
 @EntityScan(basePackages = {"com.tp.server_back.entities"})
 public class SpringConfig {
 
-    @Autowired
-    DataService dataService;
 
     public static void main(String[] args) throws IOException {
 
         SpringApplication.run(SpringConfig.class, args);
 
-
+       /* Save save = new  Save();
+        save.saveData();*/
     }
 
-    public void saveData() throws IOException{
+
+}
+class Save {
+
+    @Autowired
+    DataService dataService;
+    public void saveData() throws IOException {
         Data data = new Data();
+        data.setValue("value");
+        data.setTime("time");
 
         this.dataService.save(data);
     }

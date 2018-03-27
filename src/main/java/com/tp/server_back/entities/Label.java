@@ -16,10 +16,9 @@ public class Label implements Serializable {
     @Column(name="name")
     private String name;
     @Column(name= "data")
-    @OneToMany(mappedBy = "label")
+    @OneToMany(mappedBy = "label", cascade = CascadeType.ALL)
     private List<Data> datas;
     @ManyToOne
-    @JoinColumn(name = "id_Server")
     private Server server;
 
 

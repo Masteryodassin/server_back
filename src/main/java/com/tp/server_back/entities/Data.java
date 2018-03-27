@@ -16,7 +16,6 @@ public class Data {
     private String time;
 
     @ManyToOne
-    @JoinColumn(name = "id_Label")
     private Label label;
 
 

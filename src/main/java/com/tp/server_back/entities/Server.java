@@ -1,15 +1,11 @@
 package com.tp.server_back.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table
 @Entity
@@ -21,7 +17,7 @@ public class Server implements Serializable{
 	private int id;
 	@Column(name="name")
 	private String name;
-	@OneToMany(mappedBy="server")
+	@OneToMany(mappedBy="server",cascade = CascadeType.ALL)
 	private List<Label> labels;
 	
 	public int getId() {

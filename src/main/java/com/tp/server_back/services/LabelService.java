@@ -7,5 +7,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class LabelService extends AbstractService<Label, LabelRepository>{
 
-
 }

@@ -10,9 +10,10 @@ import java.util.List;
  */
 public interface IGenericService<T>{
 
-    void save(T entity) throws IOException;
-    void delete(T entity) throws IOException;
-    void delete(Long id) throws IOException;
-    List <T> findAll() throws IOException;
-    T findOne(Long ID) throws IOException;
+    void save(T entity) ;
+    void save(List<T> item);
+    void delete(T entity);
+    void delete(Long id) ;
+    List <T> findAll() ;
+    T findOne(Long ID) ;
 }

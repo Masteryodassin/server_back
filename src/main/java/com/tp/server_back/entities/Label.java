@@ -11,7 +11,7 @@ public class Label implements Serializable {
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     @Column(name="name")
     private String name;
@@ -21,6 +21,8 @@ public class Label implements Serializable {
     @ManyToOne
     private Server server;
 
+    @Transient
+    private int indexColumn;
 
 
     public long getId() {
@@ -48,4 +50,19 @@ public class Label implements Serializable {
     }
 
 
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public int getIndexColumn() {
+        return indexColumn;
+    }
+
+    public void setIndexColumn(int indexColumn) {
+        this.indexColumn = indexColumn;
+    }
 }

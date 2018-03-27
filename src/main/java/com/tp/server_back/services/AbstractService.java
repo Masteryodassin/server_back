@@ -17,27 +17,32 @@ public abstract class AbstractService<T, D extends CrudRepository<T, Long>> impl
     protected D repository;
 
     @Override
-    public void save(T item) throws IOException {
+    public void save(T item) {
         this.repository.save(item);
     }
 
     @Override
-    public void delete(T item) throws IOException {
+    public void save(List<T> item) {
+        this.repository.save(item);
+    }
+
+    @Override
+    public void delete(T item)  {
         this.repository.delete(item);
     }
 
     @Override
-    public void delete(Long id) throws IOException {
+    public void delete(Long id) {
         this.repository.delete(id);
     }
 
     @Override
-    public List<T> findAll() throws IOException {
+    public List<T> findAll()  {
         return (List<T>) this.repository.findAll();
     }
 
     @Override
-    public T findOne(Long ID) throws IOException {
+    public T findOne(Long ID) {
         return repository.findOne(ID);
     }
 }

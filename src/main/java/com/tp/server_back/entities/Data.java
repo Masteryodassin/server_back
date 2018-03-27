@@ -8,7 +8,7 @@ public class Data {
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     @Column(name="value")
     private String value;
@@ -36,11 +36,12 @@ public class Data {
         this.time = time;
     }
 
-    public Label getServer() {
+
+    public Label getLabel() {
         return label;
     }
 
-    public void setServer(Label label) {
+    public void setLabel(Label label) {
         this.label = label;
     }
 }

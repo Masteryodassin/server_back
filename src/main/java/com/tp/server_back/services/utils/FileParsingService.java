@@ -1,9 +1,10 @@
 package com.tp.server_back.services.utils;
 
-
 import com.tp.server_back.entities.Data;
 import com.tp.server_back.entities.Label;
 import com.tp.server_back.entities.Server;
+import com.tp.server_back.services.DataService;
+import com.tp.server_back.services.LabelService;
 import com.tp.server_back.services.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,27 +13,87 @@ import java.io.*;
 import java.util.*;
 
 @Service
-public class FileParsingService <T> {
+public class FileParsingService {
 
     @Autowired
-    final ServerService serverService;
+    private ServerService serverService;
+
+    @Autowired
+    private LabelService labelService;
+
+    @Autowired
+    private DataService dataService;
 
     private BufferedReader br;
     private String[] fieldNames;
 
 
-    public FileParsingService(ServerService serverService) throws IOException {
-
-        File file = new File("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
+    public FileParsingService(ServerService serverService, LabelService labelService, DataService dataService) throws IOException {
+        this.serverService = serverService;
+        this.labelService = labelService;
+        this.dataService = dataService;
+        /*File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
         this.serverService = serverService;
 
         List<Map<String, Map<String, String>>> serverMaps = this.parseColonnes(this.parseFile(file));
-        List<Label> labels;
-        labels = this.createColonnes(serverMaps);
+
+        List<Label> labels = this.createColonnes(serverMaps);
 
         Server server = createServer(file.getName(), labels);
-        serverService.save(server);
+        serverService.save(server);*/
+
+        uploadFile("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
     }
+
+
+    public void uploadFile(String filePath){
+        File file = new File(filePath);
+        List<String> lines = readFile(file);
+
+        Server server = new Server();
+        server.setName(file.getName());
+        this.serverService.save(server);
+        List<Label> labels = new ArrayList<>();
+        String[] tabLines = lines.get(0).split(";");
+
+        int indexTime = 0;
+
+        for (int i = 1;i<tabLines.length;i++){
+            Label label = new Label();
+            label.setName(tabLines[i]);
+            label.setServer(server);
+            label.setIndexColumn(i);
+            labels.add(label);
+        }
+
+        labelService.save(labels);
+
+        List<Data> datas = new ArrayList<>();
+
+        for (int i=1;i<lines.size();i++){
+            String[] line = lines.get(i).split(";");
+
+            for (Label label : labels){
+                Data data = new Data();
+                data.setLabel(label);
+                data.setTime(line[indexTime]);
+                data.setValue(line[label.getIndexColumn()]);
+                datas.add(data);
+            }
+        }
+        dataService.save(datas);
+
+    }
+
+    private List<String> readFile(File file){
+        try {
+            return parseFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
     /**
@@ -87,7 +148,7 @@ public class FileParsingService <T> {
 
 
         String fieldName = list.get(0);
-        fieldNames = fieldName.split(";");
+        fieldNames = fieldName.split(",");
 
 
         try {
@@ -95,7 +156,7 @@ public class FileParsingService <T> {
 
                 for (int j = 1; j < fieldNames.length; j++) {
                     try {
-                        String[] dataNames = list.get(i).split(";");
+                        String[] dataNames = list.get(i).split(",");
                         datas = new HashMap<>();
                         datas.put(dataNames[0], dataNames[j]);
                         fields.put(fieldNames[j], datas);
@@ -146,7 +207,6 @@ public class FileParsingService <T> {
                     //increase the counter
                     logger++;
                     //log the counter
-                    System.out.println(logger);
 
                     datas = new ArrayList<>();
 

@@ -24,8 +24,8 @@ public class FileParsingService {
     @Autowired
     private DataService dataService;
 
-   /* private BufferedReader br;
-    private String[] fieldNames;*/
+    private BufferedReader br;
+    private String[] fieldNames;
 
 
     public FileParsingService(ServerService serverService, LabelService labelService, DataService dataService) throws IOException {

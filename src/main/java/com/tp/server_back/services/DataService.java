@@ -4,7 +4,13 @@ import com.tp.server_back.entities.Data;
 import com.tp.server_back.repository.DataRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DataService extends AbstractService<Data, DataRepository>{
 
+    public List<Data> getDatasByLabelandServerId(long serverId, long labelId){
+        return  repository.getDatasByLabelandServerId(serverId, labelId);
+
+    }
 }

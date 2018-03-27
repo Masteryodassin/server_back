@@ -24,8 +24,8 @@ public class FileParsingService {
     @Autowired
     private DataService dataService;
 
-    private BufferedReader br;
-    private String[] fieldNames;
+   /* private BufferedReader br;
+    private String[] fieldNames;*/
 
 
     public FileParsingService(ServerService serverService, LabelService labelService, DataService dataService) throws IOException {
@@ -43,6 +43,7 @@ public class FileParsingService {
         serverService.save(server);*/
 
         uploadFile("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
+        uploadFile("/home/nico/IdeaProject/server_back/resources/srv-DC-london_global.csv");
     }
 
 

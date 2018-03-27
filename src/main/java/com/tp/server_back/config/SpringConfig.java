@@ -1,9 +1,5 @@
 package com.tp.server_back.config;
 
-import com.tp.server_back.entities.Data;
-import com.tp.server_back.services.DataService;
-import com.tp.server_back.services.utils.FileParsingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

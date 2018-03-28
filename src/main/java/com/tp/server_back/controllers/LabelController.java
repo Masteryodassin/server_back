@@ -12,18 +12,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController(value = "/label")
+@RestController
 public class LabelController {
 
     @Autowired
     LabelService labelService;
 
-    @GetMapping
-    public List<LabelDto> getServers() throws IOException {
+    @GetMapping(value = "label")
+    public List<LabelDto> getLabels() throws IOException {
         return labelService.findAll().stream().map(LabelDto:: new).collect(Collectors.toList());
     }
 
-    @GetMapping(value="/{id}")
+    @GetMapping(value="label/{id}")
     public LabelDto getOneLabel(@PathVariable("id") long id){
         return new LabelDto(labelService.findOne(id));
     }

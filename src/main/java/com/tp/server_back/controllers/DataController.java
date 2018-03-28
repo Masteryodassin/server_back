@@ -15,8 +15,8 @@ public class DataController {
     @Autowired
     DataService dataService;
 
-    @GetMapping(value="/{serverId}{labelId}")
-    public List<Data> dataList(@PathVariable("serverId") long serverId, @PathVariable("labelId") long labelId) {
+    @GetMapping(value="/{serverId};{labelId}")
+    public List<Data> displayData(@PathVariable("serverId") long serverId, @PathVariable("labelId") long labelId) {
         return dataService.getDatasByLabelandServerId(serverId, labelId);
 
     }

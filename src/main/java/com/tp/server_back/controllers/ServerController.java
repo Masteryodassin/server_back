@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController(value = "/server")
+@RestController
 public class ServerController {
 
     @Autowired
@@ -24,12 +24,12 @@ public class ServerController {
      * @return List<Server>
      * @throws IOException
      */
-    @GetMapping
+    @GetMapping(value= "server")
     public List<ServerDto> getServers() throws IOException{
         return serverService.findAll().stream().map(ServerDto:: new).collect(Collectors.toList());
     }
 
-    @GetMapping(value="/{id}")
+    @GetMapping(value="server/{id}")
     public ServerDto getOneServer(@PathVariable("id") long id){
         return  new ServerDto(serverService.findOne(id));
     }

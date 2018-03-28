@@ -13,6 +13,6 @@ import java.util.List;
 public interface DataRepository extends CrudRepository<Data, Long> {
 
         @Modifying
-        @Query("SELECT Data FROM Data as da, Label as la, Server as se WHERE (se.id) = (:serverId) AND (la.id)= (:labelId)")
+        @Query("SELECT da FROM Data AS da, Label AS la, Server AS se WHERE (se.id) = (:serverId) AND (la.id)= (:labelId)")
         List<Data> laMerdeVoilaCestTout(@Param("serverId")long serverId, @Param("labelId")long labelId);
 }

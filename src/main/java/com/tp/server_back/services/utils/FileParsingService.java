@@ -42,8 +42,8 @@ public class FileParsingService {
         Server server = createServer(file.getName(), labels);
         serverService.save(server);*/
 
-        uploadFile("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
-        uploadFile("/home/nico/IdeaProject/server_back/resources/srv-DC-london_global.csv");
+       /* uploadFile("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
+        uploadFile("/home/nico/IdeaProject/server_back/resources/srv-DC-london_global.csv");*/
     }
 
 

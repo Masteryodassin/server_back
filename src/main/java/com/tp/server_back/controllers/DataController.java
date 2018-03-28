@@ -4,6 +4,7 @@ import com.tp.server_back.entities.Data;
 import com.tp.server_back.services.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public class DataController {
     @Autowired
     DataService dataService;
 
-    @GetMapping(value="/{id}")
-    public List<Data> dataList(){
-        return dataService.getDatasByLabelandServerId();
+    @GetMapping(value="/{serverId}{labelId}")
+    public List<Data> dataList(@PathVariable("serverId") long serverId, @PathVariable("labelId") long labelId) {
+        return dataService.getDatasByLabelandServerId(serverId, labelId);
 
     }
 

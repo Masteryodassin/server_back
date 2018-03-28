@@ -2,7 +2,7 @@ package com.tp.server_back.entities;
 
 import javax.persistence.*;
 
-@Table
+@Table (name = "data")
 @Entity
 public class Data {
 

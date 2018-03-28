@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-@Table
+@Table (name = "server")
 @Entity
 public class Server implements Serializable{
 	

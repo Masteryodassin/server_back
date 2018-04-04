@@ -20,10 +20,10 @@ public class Server implements Serializable{
 	@OneToMany(mappedBy="server",cascade = CascadeType.ALL)
 	private List<Label> labels;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {

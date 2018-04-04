@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController(value = "/data")
+@RestController
 public class DataController {
 
     @Autowired
     DataService dataService;
 
-    @GetMapping(value="/{serverId};{labelId}")
+    @GetMapping(value="/data/{serverId};{labelId}")
     public List<Data> displayData(@PathVariable("serverId") long serverId, @PathVariable("labelId") long labelId) {
         return dataService.getDatasByLabelandServerId(serverId, labelId);
 

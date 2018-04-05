@@ -32,18 +32,18 @@ public class FileParsingService {
         this.serverService = serverService;
         this.labelService = labelService;
         this.dataService = dataService;
-        /*File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");
+        /*File file = new File("/home/nico/IdeaProject/server_back/resources/test.csv");*/
         this.serverService = serverService;
 
-        List<Map<String, Map<String, String>>> serverMaps = this.parseColonnes(this.parseFile(file));
+        /*List<Map<String, Map<String, String>>> serverMaps = this.parseColonnes(this.parseFile(file));
 
         List<Label> labels = this.createColonnes(serverMaps);
 
         Server server = createServer(file.getName(), labels);
         serverService.save(server);*/
 
-       /* uploadFile("/home/nico/IdeaProject/server_back/resources/esx-alger-01_global.csv");
-        uploadFile("/home/nico/IdeaProject/server_back/resources/srv-DC-london_global.csv");*/
+        /*uploadFile("C:\\Users\\ybunetel\\Documents\\idea\\server_back\\resources\\esx-alger-01_global.csv");
+        uploadFile("C:\\Users\\ybunetel\\Documents\\idea\\server_back\\resources\\srv-DC-london_global.csv");*/
     }
 
 

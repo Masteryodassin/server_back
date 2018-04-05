@@ -5,7 +5,7 @@ import com.tp.server_back.entities.Server;
 
 public class ServerDto {
 
-    private int id;
+    private long id;
     private String name;
 
     public ServerDto(Server server){
@@ -15,11 +15,11 @@ public class ServerDto {
 
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

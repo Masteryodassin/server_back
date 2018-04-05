@@ -20,6 +20,8 @@ public class Label implements Serializable {
     private List<Data> datas;
     @ManyToOne
     private Server server;
+    @ManyToOne
+    private Graph graph;
 
     @Transient
     private int indexColumn;

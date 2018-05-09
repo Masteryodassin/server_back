@@ -1,5 +1,7 @@
 package com.tp.server_back.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Table (name = "data")
@@ -19,7 +21,6 @@ public class Data {
     private Label label;
 
 
-
     public String getValue() {
         return value;
     }
@@ -36,7 +37,7 @@ public class Data {
         this.time = time;
     }
 
-
+    @JsonIgnore
     public Label getLabel() {
         return label;
     }

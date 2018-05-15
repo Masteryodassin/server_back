@@ -20,7 +20,6 @@ public class Data {
     @ManyToOne
     private Label label;
 
-
     public String getValue() {
         return value;
     }

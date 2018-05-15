@@ -18,12 +18,12 @@ public class LabelController {
     @Autowired
     LabelService labelService;
 
-    @GetMapping(value = "label")
+    @GetMapping(value = "/label")
     public List<LabelDto> getLabels() throws IOException {
         return labelService.findAll().stream().map(LabelDto:: new).collect(Collectors.toList());
     }
 
-    @GetMapping(value="label/{id}")
+    @GetMapping(value="/label/{id}")
     public LabelDto getOneLabel(@PathVariable("id") long id){
         return new LabelDto(labelService.findOne(id));
     }

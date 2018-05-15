@@ -24,12 +24,12 @@ public class ServerController {
      * @return List<Server>
      * @throws IOException
      */
-    @GetMapping(value= "server")
+    @GetMapping(value= "/server")
     public List<ServerDto> getServers() throws IOException{
         return serverService.findAll().stream().map(ServerDto:: new).collect(Collectors.toList());
     }
 
-    @GetMapping(value="server/{id}")
+    @GetMapping(value="/server/{id}")
     public ServerDto getOneServer(@PathVariable("id") long id){
         return  new ServerDto(serverService.findOne(id));
     }

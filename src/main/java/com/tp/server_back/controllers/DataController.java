@@ -25,6 +25,9 @@ public class DataController {
 
     }
 
+    /**
+     * Inner class specifying the requestBody for querying the data regarding one server and label type
+     */
     static class RequestData {
         long serverId;
         long labelId;

@@ -15,7 +15,7 @@ public class Graph {
     @Column(name="end")
     private long endTime;
 
-    @OneToMany(mappedBy = "graph",cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Label> labels;
 
     public long getId() {

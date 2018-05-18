@@ -26,9 +26,10 @@ public class DataController {
     }
 
     /**
-     * Inner class specifying the requestBody for querying the data regarding one server and label type
+     * Inner class specifying the requestBody for querying datas regarding one server and label type
+     * in between two timestamps
      */
-    static class RequestData {
+    private static class RequestData {
         long serverId;
         long labelId;
         String timeStart;

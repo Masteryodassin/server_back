@@ -1,5 +1,8 @@
 package com.tp.server_back.entities;
 
+import com.tp.server_back.controllers.dtos.GraphDto;
+import com.tp.server_back.controllers.dtos.LabelDto;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,12 +14,14 @@ public class Graph {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name="start")
-    private long startTime;
+    private String startTime;
     @Column(name="end")
-    private long endTime;
+    private String endTime;
 
     @ManyToMany
     private List<Label> labels;
+
+    public Graph(){}
 
     public long getId() {
         return id;
@@ -26,19 +31,19 @@ public class Graph {
         this.id = id;
     }
 
-    public long getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

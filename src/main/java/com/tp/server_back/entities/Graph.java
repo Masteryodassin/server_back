@@ -1,7 +1,5 @@
 package com.tp.server_back.entities;
 
-import com.tp.server_back.controllers.dtos.GraphDto;
-import com.tp.server_back.controllers.dtos.LabelDto;
 
 import javax.persistence.*;
 import java.util.List;

@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 public class DataController {
 
     @Autowired
     DataService dataService;
+
 
     @PostMapping(value="/data")
     public List<Data> displayData(@RequestBody RequestData requestData) {
@@ -36,7 +38,6 @@ public class DataController {
         String timeEnd;
 
         public RequestData(){}
-
 
         public long getServerId() {
             return serverId;

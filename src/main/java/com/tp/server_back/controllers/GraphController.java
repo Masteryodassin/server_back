@@ -1,7 +1,6 @@
 package com.tp.server_back.controllers;
 
 import com.tp.server_back.controllers.dtos.GraphDto;
-import com.tp.server_back.controllers.dtos.LabelDto;
 import com.tp.server_back.entities.Graph;
 import com.tp.server_back.services.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,13 @@ import java.util.stream.Collectors;
 /**
  * Created by ybunetel on 15/05/2018.
  */
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 public class GraphController {
 
     @Autowired
     GraphService graphService;
+
 
     @GetMapping(value = "/graph")
     public List<GraphDto> getGraphs() throws IOException {

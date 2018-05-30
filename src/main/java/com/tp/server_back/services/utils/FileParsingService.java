@@ -6,11 +6,13 @@ import com.tp.server_back.entities.Server;
 import com.tp.server_back.services.DataService;
 import com.tp.server_back.services.LabelService;
 import com.tp.server_back.services.ServerService;
+import com.tp.server_back.services.utils.storage.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FileParsingService {
@@ -24,22 +26,41 @@ public class FileParsingService {
     @Autowired
     private DataService dataService;
 
+    @Autowired
+    FileSystemStorageService fileSystemStorageService;git
+
     private BufferedReader br;
     private String[] fieldNames;
 
 
-    public FileParsingService(ServerService serverService, LabelService labelService, DataService dataService) throws IOException {
+    public FileParsingService(ServerService serverService, LabelService labelService,
+                              DataService dataService, FileSystemStorageService fileSystemStorageService) throws IOException {
+
         this.serverService = serverService;
         this.labelService = labelService;
         this.dataService = dataService;
-
         this.serverService = serverService;
+        this.fileSystemStorageService = fileSystemStorageService;
+
+    }
+
+    public void loadAll(){
+        List<String> paths = fileSystemStorageService
+                .loadAll()
+                .map(path ->
+                        path.getFileName().toString())
+                .collect(Collectors.toList());
 
         try {
-            //uploadFile("/home/nico/IdeaProject/server_back/src/main/resources/static/esx-alger-01_global.csv");
-            //uploadFile("/home/nico/IdeaProject/server_back/src/main/resources/static/srv-DC-london_global.csv");
+            for (String path:paths
+                 ) {
+                uploadFile(fileSystemStorageService.getPath() + "/" + path);
+            }
+
         }catch(ArrayIndexOutOfBoundsException ae){
             ae.printStackTrace();
+        }catch(NullPointerException npe){
+            npe.printStackTrace();
         }
     }
 
@@ -56,7 +77,7 @@ public class FileParsingService {
 
         int indexTime = 1;
 
-        for (int i = 1;i<tabLines.length;i++){
+        for (int i = 2;i<tabLines.length;i++){
             Label label = new Label();
             label.setName(tabLines[i]);
             label.setServer(server);

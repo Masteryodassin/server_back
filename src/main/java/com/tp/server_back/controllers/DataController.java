@@ -39,7 +39,7 @@ public class DataController {
         for (Long id : labelIds
              ) {
 
-            datas = dataService.getDatasByLabelandServerId(serverId, id, timeStart, timeEnd);//.stream().map(Data::new).collect(Collectors.toList());
+            datas = dataService.getDatasByLabelandServerId(serverId, id, timeStart, timeEnd);
             name = labelService.findOne(id).getName();
             dataDto = new DataDto(name,id);
             datasMap = new HashMap<>();

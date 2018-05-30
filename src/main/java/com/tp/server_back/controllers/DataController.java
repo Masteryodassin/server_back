@@ -1,11 +1,16 @@
 package com.tp.server_back.controllers;
 
+import com.tp.server_back.controllers.dtos.DataDto;
 import com.tp.server_back.entities.Data;
 import com.tp.server_back.services.DataService;
+import com.tp.server_back.services.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -14,16 +19,54 @@ public class DataController {
     @Autowired
     DataService dataService;
 
+    @Autowired
+    LabelService labelService;
+
 
     @PostMapping(value="/data")
-    public List<Data> displayData(@RequestBody RequestData requestData) {
+    public List<DataDto> displayData(@RequestBody RequestData requestData) {
 
+        List<DataDto> dataDtos = new ArrayList<>();
+        List<Data> datas;
+        DataDto dataDto;
+        Map<String, Double> datasMap;
+        String name;
         long serverId = requestData.getServerId();
-        long labelId = requestData.getLabelId();
+        List<Long> labelIds = requestData.getLabelIds();
         String timeStart = requestData.getTimeStart();
-        String timeEnd =requestData.getTimeEnd();
+        String timeEnd = requestData.getTimeEnd();
 
-        return dataService.getDatasByLabelandServerId(serverId, labelId, timeStart, timeEnd);
+        for (Long id : labelIds
+             ) {
+
+            datas = dataService.getDatasByLabelandServerId(serverId, id, timeStart, timeEnd);//.stream().map(Data::new).collect(Collectors.toList());
+            name = labelService.findOne(id).getName();
+            dataDto = new DataDto(name,id);
+            datasMap = new HashMap<>();
+
+            for (int i = 0; i < datas.size(); i++) {
+
+                Data data = datas.get(i);
+
+                if (data.getLabel().getId() == id) {
+
+                    Double value;
+
+                    String key = data.getTime();
+                    if (data.getValue().equals("")){
+                        value = 0.0;
+                    }else {
+                        value = Double.parseDouble(data.getValue());
+                    }
+                    datasMap.put(key, value);
+                    dataDto.setDatasMap(datasMap);
+                }
+            }
+            dataDtos.add(dataDto);
+
+        }
+
+        return dataDtos;
 
     }
 
@@ -33,7 +76,7 @@ public class DataController {
      */
     private static class RequestData {
         long serverId;
-        long labelId;
+        List<Long> labelIds;
         String timeStart;
         String timeEnd;
 
@@ -47,12 +90,12 @@ public class DataController {
             this.serverId = serverId;
         }
 
-        public long getLabelId() {
-            return labelId;
+        public List<Long> getLabelIds() {
+            return labelIds;
         }
 
-        public void setLabelId(long labelId) {
-            this.labelId = labelId;
+        public void setLabelIds(List<Long> labelIds) {
+            this.labelIds = labelIds;
         }
 
         public String getTimeStart() {

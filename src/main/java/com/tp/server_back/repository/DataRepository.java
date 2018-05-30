@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface DataRepository extends CrudRepository<Data, Long> {
 
-        @Modifying
-        @Query("SELECT dat.time, dat.value, dat.label.id FROM Data AS dat, " +
+
+        /*@Query(value = "SELECT dat.time, dat.value, dat.label.id FROM Data AS dat, " +
                 "Server AS se, Label AS la " +
                 "WHERE (se.id) = (la.server.id) AND " +
                 "(se.id) = (:serverId) AND " +
@@ -23,5 +23,13 @@ public interface DataRepository extends CrudRepository<Data, Long> {
         List<Data> getDatasByLabelandServerId(@Param("serverId")long serverId,
                                         @Param("labelId")long labelId,
                                         @Param("timeStart") String timeStart,
-                                        @Param("timeEnd") String timeEnd);
+                                        @Param("timeEnd") String timeEnd);*/
+
+        @Query(value = "select dat FROM Data dat where dat.label.id = :labelId and dat.label.server.id = :serverId" +
+                " and (dat.time) >= (:timeStart) AND (dat.time) <= (:timeEnd)")
+        List<Data> getDatasByLabelandServerId(@Param("serverId")long serverId,
+                                              @Param("labelId")long labelId,
+                                              @Param("timeStart") String timeStart,
+                                              @Param("timeEnd") String timeEnd);
+
 }

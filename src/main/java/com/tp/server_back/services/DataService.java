@@ -10,6 +10,7 @@ import java.util.List;
 public class DataService extends AbstractService<Data, DataRepository>{
 
     public List<Data> getDatasByLabelandServerId(long serverId, long labelId, String timeStart, String timeEnd){
+
         return  repository.getDatasByLabelandServerId(serverId, labelId, timeStart, timeEnd);
 
     }
